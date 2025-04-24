@@ -10,7 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
+        with: 
+          username: 20031018
           node-version: 20
       - run: npm install
       - run: npm run build
