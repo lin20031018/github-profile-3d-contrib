@@ -1,25 +1,27 @@
 name: Generate 3D Contribution Graph
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 可以手動執行
   schedule:
-    - cron: "0 0 * * *"  # 每天 00:00 UTC 自動執行
+    - cron: "0 0 * * *"  # 每天 00:00 UTC 執行一次
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     name: Generate 3D GitHub Contribution
+    runs-on: ubuntu-latest
+
+    # ✅ 允許這個 Action 有寫入權限（用來 push 產出的圖片）
+    permissions:
+      contents: write
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Generate SVG
+      - name: Run 3D Contribution Graph Generator
         uses: yoshi389111/github-profile-3d-contrib@main
-        with:
-          username: lin20031018
 
-      - name: Push SVG
+      - name: Commit and Push Result
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
