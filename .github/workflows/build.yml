@@ -1,7 +1,7 @@
 name: Generate 3D Contribution Graph
 
 on:
-  workflow_dispatch:  # 可以手動執行
+  workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"  # 每天 00:00 UTC 執行一次
 
@@ -10,21 +10,22 @@ jobs:
     name: Generate 3D GitHub Contribution
     runs-on: ubuntu-latest
 
-    # ✅ 允許這個 Action 有寫入權限（用來 push 產出的圖片）
     permissions:
       contents: write
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run 3D Contribution Graph Generator
-        uses: yoshi389111/github-profile-3d-contrib@main
+      - name: Generate 3D Graph using forked action
+        uses: n8n-io/github-profile-3d-contrib@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit and Push Result
+      - name: Commit and push result
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add profile-3d-contrib
-          git commit -m "update 3D contribution graph" || echo "No changes to commit"
+          git commit -m "update 3D contribution graph" || echo "no changes"
           git push
