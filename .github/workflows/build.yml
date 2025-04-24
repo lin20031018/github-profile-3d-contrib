@@ -19,7 +19,7 @@ jobs:
         with:
           username: lin20031018
 
-      - name: Push SV
+      - name: Push SVG
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
