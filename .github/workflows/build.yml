@@ -1,24 +1,28 @@
-name: Build and Commit
+name: Generate 3D Contribution Graph
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"  # 每天 00:00 UTC 自動執行
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Generate 3D GitHub Contribution
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: 
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate SVG
+        uses: yoshi389111/github-profile-3d-contrib@main
+        with:
           username: lin20031018
-          node-version: 20
-      - run: npm install
-      - run: npm run build
-      - run: |
-          git config user.name github-actions
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git add dist/
-          if git commit -m "Update build" ; then
-            git push origin HEAD:main
-          fi
+
+      - name: Push SVG
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add profile-3d-contrib
+          git commit -m "update 3D contribution graph" || echo "No changes to commit"
+          git push
